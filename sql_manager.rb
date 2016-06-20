@@ -26,12 +26,13 @@ class Book
     @page_count = attributes[:page_count]
     @genre = attributes[:genre]
     @price = attributes[:price]
+    @@db ||= SQLite3::Database.new "literature.db"
   end
 
   def self.db
-    @@db ||= SQLite3::Database.new "literature.db"
+    @@db
   end
-  
+
   def self.all
     sql = <<-SQL
     SELECT * FROM books;
@@ -45,6 +46,11 @@ class Book
 
   def save
     # Your code here
+    sql = <<-SQL
+    INSERT INTO books(title, page_count, genre, price)
+    VALUES(?,?,?,?);
+    SQL
+    db.execute(sql, self.title, self.page_count, self.genre, self.price)
   end
 
   def ==(other_object)
@@ -54,11 +60,23 @@ class Book
 
   def destroy
     #  Your code here
+    sql = <<-SQL
+    DELETE FROM books
+    WHERE id = ?;
+    SQL
+
+    sql.execute(sql, self.id)
   end
 
 
   def self.find(id)
     # Your code here
+    sql = <<-SQL
+    SELECT * FROM books
+    WHERE id = ?;
+    SQL
+
+    sql.execute(sql, id)
   end
 
 
@@ -74,6 +92,13 @@ class Book
 
   def update
     # Your code here
+    sql = <<-SQL
+    UPDATE TABLE books
+    SET title = ?, page_count = ?, genre = ?, price = ?
+    WHERE id = ?
+    SQL
+
+    db.execute(sql, self.title, self.page_count, self.genre, self.price, self.id)
   end
 end
 
