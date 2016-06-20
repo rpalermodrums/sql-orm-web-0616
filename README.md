@@ -17,3 +17,5 @@ Please work with a partner to fill in the methods outlined in sql_manager.rb. Ou
 + book.insert
 + book.destroy
 + book.update
+
+When you've finished, create a pull request with your code. Please add your partner's name in a comment so we'll know who you worked with.
